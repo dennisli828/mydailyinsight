@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Daily Insight - Podcast Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+
+        .status-banner {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .status-banner h3 {
+            margin-bottom: 10px;
+        }
+
+        .input-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+
+        .input-section:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: #e2e8f0;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .demo-notice {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            border: 2px solid #fc8181;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .demo-notice h4 {
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+
+        .demo-notice p {
+            color: #744210;
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+            border: 2px solid #68d391;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .next-steps h3 {
+            color: #2f855a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .next-steps ul {
+            color: #2f855a;
+            padding-left: 20px;
+        }
+
+        .next-steps li {
+            margin-bottom: 8px;
+        }
+
+        .roadmap {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .roadmap h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .roadmap-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-current {
+            background: #ffd700;
+            color: #000;
+        }
+
+        .status-next {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .status-future {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎙️ My Daily Insight</h1>
+            <p>Personal Podcast Transcription & Analysis Portal</p>
+        </div>
+
+        <div class="status-banner">
+            <h3>🚧 Development Mode</h3>
+            <p>Portal interface ready | Next: Adding OpenAI API integration for real transcription</p>
+        </div>
+
+        <div class="input-section">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('url')">📎 YouTube/Podcast URL</button>
+                <button class="tab-btn" onclick="switchTab('upload')">📁 Upload Audio File</button>
+            </div>
+
+            <div class="tab-content active" id="url-tab">
+                <input type="text" id="podcast-url" placeholder="Paste YouTube or podcast URL here..." />
+                <button class="btn" onclick="processUrl()" id="url-btn">🚀 Extract & Transcribe</button>
+            </div>
+
+            <div class="tab-content" id="upload-tab">
+                <div class="upload-area" id="upload-area" onclick="document.getElementById('audio-file').click()">
+                    <p>🎵 Drop your audio file here or click to browse</p>
+                    <p style="color: #718096; margin-top: 10px;">Supported: MP3, WAV, M4A, OGG</p>
+                </div>
+                <input type="file" id="audio-file" accept="audio/*" style="display: none;" onchange="handleFileSelect(event)" />
+                <button class="btn" onclick="processFile()" id="upload-btn" disabled>🎯 Transcribe & Analyze</button>
+            </div>
+
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="demo-notice">
+            <h4>⚠️ Demo Mode Active</h4>
+            <p>This is your portal interface. API integration for real transcription coming in the next steps!</p>
+        </div>
+
+        <div class="next-steps">
+            <h3>✅ What's Working Now:</h3>
+            <ul>
+                <li>✅ Portal interface loaded and responsive</li>
+                <li>✅ File upload detection working</li>
+                <li>✅ Multi-device access (works on phone, tablet, desktop)</li>
+                <li>✅ Foundation ready for API integration</li>
+            </ul>
+        </div>
+
+        <div class="roadmap">
+            <h3>🗺️ Implementation Roadmap</h3>
+            <div class="roadmap-item">
+                <strong>Phase 1: OpenAI API Integration</strong>
+                <span class="status-badge status-current">Next Step</span>
+                <p>Add Whisper transcription + GPT-4 analysis via serverless functions</p>
+            </div>
+            <div class="roadmap-item">
+                <strong>Phase 2: YouTube URL Processing</strong>
+                <span class="status-badge status-next">Coming Soon</span>
+                <p>Direct URL-to-transcript pipeline with yt-dlp integration</p>
+            </div>
+            <div class="roadmap-item">
+                <strong>Phase 3: Data Persistence</strong>
+                <span class="status-badge status-future">Future</span>
+                <p>Save transcriptions, search history, export capabilities</p>
+            </div>
+            <div class="roadmap-item">
+                <strong>Phase 4: Advanced Features</strong>
+                <span class="status-badge status-future">Future</span>
+                <p>Speaker diarization, semantic search, Notion/Slack integrations</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+
+        // File handling
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('upload-btn').disabled = false;
+                document.querySelector('#upload-area p').textContent = `Selected: ${file.name}`;
+                showNotification(`File "${file.name}" ready for transcription!`, 'success');
+            }
+        }
+
+        // Demo processing functions
+        function processUrl() {
+            const url = document.getElementById('podcast-url').value;
+            if (!url) {
+                showNotification('Please enter a URL first', 'warning');
+                return;
+            }
+            
+            showProgress('Extracting audio from URL...');
+            setTimeout(() => {
+                hideProgress();
+                showNotification('URL processing will be added in Phase 2! Use file upload for now.', 'info');
+            }, 2000);
+        }
+
+        function processFile() {
+            const file = document.getElementById('audio-file').files[0];
+            if (!file) {
+                showNotification('Please select a file first', 'warning');
+                return;
+            }
+            
+            showProgress('Processing audio file...');
+            setTimeout(() => {
+                hideProgress();
+                showNotification('Real transcription coming next! API integration in progress.', 'info');
+            }, 3000);
+        }
+
+        // UI helper functions
+        function showProgress(message) {
+            const progressBar = document.getElementById('progress-bar');
+            const progressFill = document.getElementById('progress-fill');
+            
+            progressBar.style.display = 'block';
+            progressFill.style.width = '0%';
+            
+            // Simulate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                progressFill.style.width = progress + '%';
+            }, 200);
+            
+            progressBar.interval = interval;
+        }
+
+        function hideProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressFill = document.getElementById('progress-fill');
+            
+            if (progressBar.interval) {
+                clearInterval(progressBar.interval);
+            }
+            
+            progressFill.style.width = '100%';
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }, 500);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${type === 'success' ? '#48bb78' : type === 'warning' ? '#ed8936' : '#4299e1'};
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-weight: 500;
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        // Drag and drop for file upload
+        const uploadArea = document.getElementById('upload-area');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight() {
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = 'rgba(102, 126, 234, 0.1)';
+        }
+
+        function unhighlight() {
+            uploadArea.style.borderColor = '#cbd5e0';
+            uploadArea.style.background = 'rgba(102, 126, 234, 0.05)';
+        }
+
+        function handleDrop(e) {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('audio-file').files = files;
+                handleFileSelect({ target: { files: files } });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('Portal loaded successfully! Ready for API integration.', 'success');
+        });
+    </script>
+</body>
+</html>
